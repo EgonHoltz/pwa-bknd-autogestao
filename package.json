@@ -1,0 +1,24 @@
+{
+  "name": "pt.autogestao",
+  "version": "1.0.0",
+  "description": "Backend of Auto Gestao application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EgonHoltz/pwa-bknd-autogestao.git"
+  },
+  "author": "Egon Holtz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EgonHoltz/pwa-bknd-autogestao/issues"
+  },
+  "homepage": "https://github.com/EgonHoltz/pwa-bknd-autogestao#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongodb": "^4.3.1",
+    "mongoose": "^5.13.8"
+  }
+}

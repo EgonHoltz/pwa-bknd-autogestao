@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/EgonHoltz/pwa-bknd-autogestao#readme",
   "dependencies": {
+    "body-parser": "^1.19.1",
+    "cookie-parser": "^1.4.6",
     "express": "^4.17.2",
+    "express-sanitizer": "^1.0.6",
+    "express-validator": "^6.14.0",
+    "fs": "^0.0.1-security",
     "mongodb": "^4.3.1",
     "mongoose": "^5.13.8"
   }

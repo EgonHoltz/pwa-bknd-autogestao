@@ -30,25 +30,24 @@ router.route('/')
     
     router.route('/:id/maintenance')
     .post(AuthController.checkAuth, [
-        body('id').isMongoId(),
-        body('maintenance.lastOilChange').isNumeric(),
-        body('maintenance.lastBrakesChange').isNumeric(),
-        body('maintenance.lastTireChange').isNumeric(),
-        body('maintenance.lastChainChange').isNumeric(),
-        body('maintenance.lastOilFilterChange').isNumeric(),
-        body('maintenance.lastCamberReview').isNumeric(),
-        body('maintenance.lastWaterChange').isNumeric(),
-        body('maintenance.lastInspection').isISO8601(),
-        body('maintenance.additionalComments').isString(),
-        sanitizeBody('maintenance.additionalComments').whitelist(CONFIG.sanitize.alphabet + CONFIG.sanitize.numerical)
+        param('id').isMongoId(),
+        body('lastOilChange').isNumeric(),
+        body('lastBrakesChange').isNumeric(),
+        body('lastTireChange').isNumeric(),
+        body('lastChainChange').isNumeric(),
+        body('lastOilFilterChange').isNumeric(),
+        body('lastCamberReview').isNumeric(),
+        body('lastWaterChange').isNumeric(),
+        body('lastInspection').isISO8601(),
+        body('additionalComments').isString(),
+        sanitizeBody('additionalComments').whitelist(CONFIG.sanitize.alphabet + CONFIG.sanitize.numerical)
     ], CarController.updateMaintenance);
     
     router.route('/:id/refuel')
     .post(AuthController.checkAuth, [
-        body('id').isMongoId(),
-        body('refuel.actualRefuelLiters').isNumeric(),
-        body('refuel.actualRefuelPrice').isNumeric(),
-        body('refuel.actualRefuelDate').isISO8601()
+        param('id').isMongoId(),
+        body('actualRefuelLiters').isNumeric(),
+        body('actualRefuelPrice').isNumeric()
     ], CarController.updateRefuel);
 
 

@@ -99,15 +99,15 @@ exports.updateMaintenance = (req,res) => {
         _id: req.params.id
     }, {
         maintenance: {
-            lastOilChange : req.body.maintenance.lastOilChange,
-            lastBrakesChange : req.body.maintenance.lastBrakesChange,
-            lastTireChange : req.body.maintenance.lastTireChange,
-            lastChainChange : req.body.maintenance.lastChainChange,
-            lastOilFilterChange : req.body.maintenance.lastOilFilterChange,
-            lastCamberReview : req.body.maintenance.lastCamberReview,
-            lastWaterChange : req.body.maintenance.lastWaterChange,
-            lastInspection : req.body.maintenance.lastInspection,
-            additionalComments : req.body.maintenance.additionalComments
+            lastOilChange : req.body.lastOilChange,
+            lastBrakesChange : req.body.lastBrakesChange,
+            lastTireChange : req.body.lastTireChange,
+            lastChainChange : req.body.lastChainChange,
+            lastOilFilterChange : req.body.lastOilFilterChange,
+            lastCamberReview : req.body.lastCamberReview,
+            lastWaterChange : req.body.lastWaterChange,
+            lastInspection : req.body.lastInspection,
+            additionalComments : req.body.additionalComments
         }
     }, {
         new: true
@@ -125,14 +125,14 @@ exports.updateMaintenance = (req,res) => {
 exports.updateRefuel = (req,res) =>{
     const errors = validationResult(req).array();
     if (errors.length > 0) return res.status(406).send(errors);
-
+    actualDate = new Date;
     Car.findOneAndUpdate({
         _id: req.params.id
     }, {
         refuel: {
-            actualRefuelLiters : req.body.refuel.actualRefuelLiters,
-            actualRefuelPrice : req.body.refuel.actualRefuelPrice,
-            actualRefuelDate : req.body.refuel.actualRefuelDate,
+            actualRefuelLiters : req.body.actualRefuelLiters,
+            actualRefuelPrice : req.body.actualRefuelPrice,
+            actualRefuelDate : actualDate
         }
     }, {
         new: true

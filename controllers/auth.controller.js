@@ -51,6 +51,7 @@ exports.login = (req, res) => {
 }
 
 exports.checkAuth = (req, res, callback) => {
+    console.log("/auth/checkAuth")
     //TODO: remove bypass
     return callback();
 

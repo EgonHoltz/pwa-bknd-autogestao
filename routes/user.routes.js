@@ -13,7 +13,6 @@ const AuthController = require("../controllers/auth.controller");
 
 router.route('/')
     .post([body('name').isString(),
-        body('type').isAlpha(),
         body('birthDate').isISO8601(),
         body('email').isEmail(),
         body('freeAddress').isString(),

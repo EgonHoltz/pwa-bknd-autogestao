@@ -3,6 +3,7 @@ const {
     validationResult
 } = require('express-validator');
 const AuthMessages = require("../messages/auth.messages");
+const UserMessages = require("../messages/user.messages");
 //const bcrypt = require("bcryptjs");
 //const JWT = require("jsonwebtoken");
 const CONFIG = require("../config/config");
@@ -27,7 +28,18 @@ exports.login = (req, res) => {
     }, (error, user) => {
         if (error) throw error;
 
+        let actualDate = new Date
+        let id = user._id;
+        let browser = req.rawHeaders[7].split(",")[1].split(";")[0].replace(/["]+/g, '').trim() +", " + req.rawHeaders[7].split(",")[1].split(";")[1].replace(/["]+/g, '');
+        let soWithBrowser = req.rawHeaders[15].replace(/["]+/g, '') + " - " + browser;
+        let access = {
+            lastLoginDate: actualDate,
+            ipAddress: req.rawHeaders[21],
+            loginSuccess: true,
+            client: soWithBrowser
+        }
         //if (!user || !bcrypt.compareSync(password, user.auth.password))
+        //    access.loginSuccess = false
         //    return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
 
         let payload = {
@@ -39,6 +51,21 @@ exports.login = (req, res) => {
             issuer: CONFIG.auth.issuer
         };
 
+        User.updateOne({
+            _id: id
+        }, {
+            $set: {
+                access: access
+            }
+        }, (error, result) => {
+            if (error) throw error;
+    
+            if (result.n <= 0) return res.status(UserMessages.error.e0.http).send(UserMessages.error.e0);
+            //return res.status(UserMessages.success.s6.http).send(UserMessages.success.s6);
+    
+        });
+        
+        user.access = access;
         //let token = JWT.sign(payload, user.auth.private_key, options);
 
         let message = AuthMessages.success.s0;

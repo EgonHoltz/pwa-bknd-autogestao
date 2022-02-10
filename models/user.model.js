@@ -4,7 +4,10 @@ const CONFIG = require('../config/config');
 
 const userSchema = new Schema({
     name: String,
-    type: String,
+    type: {
+        type: String,
+        default: "user"   
+    },
     birthDate : Date,
     email : String,
     freeAddress: String,
@@ -25,6 +28,12 @@ const userSchema = new Schema({
     active: {
         type: Boolean,
         default: true
+    },
+    access: {
+        lastLoginDate: Date,
+        ipAddress: String,
+        loginSuccess: Boolean,
+        client: String
     }
 });
 userSchema.pre("save", (cb)=>{

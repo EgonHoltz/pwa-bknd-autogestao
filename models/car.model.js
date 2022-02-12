@@ -7,7 +7,6 @@ const carSchema = new Schema({
     model: String,
     registration: {
         type: String,
-        unique: true
     },
     characteristics: {
         productionDate : Date,
@@ -22,15 +21,20 @@ const carSchema = new Schema({
         lastOilFilterChange: Number,
         lastCamberReview: Number,
         lastWaterChange: Number,
-        lastInspection: Date,
+        lastInspection: {
+            type: Date,
+            default: Date.now
+        },
         additionalComments: String
     },
     refuel: {
         lastRefuelDate: Date,
         lastRefuelLiters: Number,
         lastRefuelPrice: Number,
+        lastRefuelKm: Number,
         actualRefuelLiters: Number,
         actualRefuelPrice: Number,
+        actualRefuelKm: Number,
         actualRefuelDate: {
             type: Date,
             default: Date.now
@@ -39,6 +43,10 @@ const carSchema = new Schema({
     registrationDate: {
         type: Date,
         default: Date.now
+    },
+    user: {
+        type: String,
+        ref: CONFIG.mongodb.collections.user
     }
 });
 

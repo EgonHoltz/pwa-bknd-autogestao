@@ -3,7 +3,7 @@ const {
     validationResult
 } = require('express-validator');
 const UserMessages = require("../messages/user.messages");
-//const JWT = require("jsonwebtoken");
+const JWT = require("jsonwebtoken");
 const CONFIG = require("../config/config");
 const Car = require("../models/car.model");
 
@@ -64,22 +64,20 @@ exports.create = (req, res) => {
         }).save((error, user) => {
             if (error) throw error;
 
-            //let payload = {
-             //   pk: user.auth.public_key
-            //}
+            let payload = {
+               pk: user.auth.publicKey
+            }
 
             let options = {
                 expiresIn: CONFIG.auth.expiration_time,
                 issuer: CONFIG.auth.issuer
             };
 
-            //let token = JWT.sign(payload, user.auth.private_key, options);
-
+            let token = JWT.sign(payload, user.auth.privateKey, options);
 
             let message = UserMessages.success.s0;
             message.body = user;
-            return res.header("location", "/users/" + user._id).status(message.http).send(message);
-            //return res.header("location", "/users/" + user._id).header("Authorization", token).status(message.http).send(message);
+            return res.header("location", "/users/" + user._id).header("Authorization", token).status(message.http).send(message);
         })
     });
 

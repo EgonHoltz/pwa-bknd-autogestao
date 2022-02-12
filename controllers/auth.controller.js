@@ -5,7 +5,7 @@ const {
 const AuthMessages = require("../messages/auth.messages");
 const UserMessages = require("../messages/user.messages");
 //const bcrypt = require("bcryptjs");
-//const JWT = require("jsonwebtoken");
+const JWT = require("jsonwebtoken");
 const CONFIG = require("../config/config");
 
 exports.getInfo = (req, res) => {
@@ -43,7 +43,7 @@ exports.login = (req, res) => {
         //    return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
 
         let payload = {
-            pk: user.auth.public_key
+            pk: user.auth.publicKey
         }
 
         let options = {
@@ -58,20 +58,15 @@ exports.login = (req, res) => {
                 access: access
             }
         }, (error, result) => {
-            if (error) throw error;
-    
-            if (result.n <= 0) return res.status(UserMessages.error.e0.http).send(UserMessages.error.e0);
-            //return res.status(UserMessages.success.s6.http).send(UserMessages.success.s6);
-    
+            if (error) console.log(error);    
         });
         
         user.access = access;
-        //let token = JWT.sign(payload, user.auth.private_key, options);
+        let token = JWT.sign(payload, user.auth.privateKey, options);
 
         let message = AuthMessages.success.s0;
         message.body = user;
-        return res.status(message.http).send(message);
-        //return res.header("Authorization", token).status(message.http).send(message);
+        return res.header("Authorization", token).status(message.http).send(message);
 
     });
 
@@ -79,8 +74,6 @@ exports.login = (req, res) => {
 
 exports.checkAuth = (req, res, callback) => {
     console.log("/auth/checkAuth")
-    //TODO: remove bypass
-    return callback();
 
     let token = req.headers.authorization;
     if (!token) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
@@ -89,12 +82,12 @@ exports.checkAuth = (req, res, callback) => {
     let payload = JWT.decode(token);
 
     User.findOne({
-        "auth.public_key": payload.pk
+        "auth.publicKey": payload.pk
     }, (error, user) => {
         if (error) throw error;
         if (!user) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
 
-        JWT.verify(token, user.auth.private_key, (error) => {
+        JWT.verify(token, user.auth.privateKey, (error) => {
             if (error) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
 
             req.user = user;

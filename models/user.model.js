@@ -36,11 +36,11 @@ const userSchema = new Schema({
         client: String
     }
 });
-userSchema.pre("save", (cb)=>{
-    //this.auth.publicKey = Math.random().toString(36).substring(2) + this._id;
-    //this.auth.privateKey = Math.random().toString(36).substring(2) + this._id;
+userSchema.pre("save", function (callback){
+    this.auth.publicKey = Math.random().toString(36).substring(2) + this._id;
+    this.auth.privateKey = Math.random().toString(36).substring(2) + this._id;
     
-    cb();
+    callback();
 })
 
 module.exports = global.mongoConnection.model(CONFIG.mongodb.collections.user, userSchema);

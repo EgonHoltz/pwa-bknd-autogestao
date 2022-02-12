@@ -47,8 +47,12 @@ router.route('/')
     .post(AuthController.checkAuth, [
         param('id').isMongoId(),
         body('actualRefuelLiters').isNumeric(),
-        body('actualRefuelPrice').isNumeric()
+        body('actualRefuelPrice').isNumeric(),
+        body('actualRefuelKm').isNumeric()
     ], CarController.updateRefuel);
+
+    router.route('/import')
+    .get(AuthController.checkAuth, [param("id").isMongoId()], CarController.importCar);
 
 
 module.exports = router;

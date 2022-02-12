@@ -1,12 +1,16 @@
 const Car = require('../models/car.model');
+const User = require('../models/user.model');
 const {
     validationResult
 } = require('express-validator');
 const CarMessages = require("../messages/car.messages");
+const fs = require('fs');
 
 exports.get = (req, res) => {
 
-    Car.find(req.query).exec((error, cars) => {
+    Car.find({
+        user: req.user._id
+    }).exec((error, cars) => {
         if (error) throw error;
 
         let message = CarMessages.success.s2;
@@ -26,11 +30,26 @@ exports.create = (req, res) => {
     new Car({
         brand: req.body.brand,
         model: req.body.model,
+        registration: req.body.registration,
         characteristics: {
             productionDate: req.body.characteristics.productionDate,
             FuelType: req.body.characteristics.FuelType,
             standardTirePSI: req.body.characteristics.standardTirePSI,
-        }
+        },
+        maintenance: {
+            lastOilChange: 0,
+            lastBrakesChange: 0,
+            lastTireChange: 0,
+            lastChainChange: 0,
+            lastOilFilterChange: 0,
+            lastCamberReview: 0,
+            lastWaterChange: 0,
+            additionalComments: ""
+        },
+        refuel: {
+            actualRefuelKm: req.body.refuel.actualRefuelKm
+        },
+        user: req.user._id
     }).save((error, Car) => {
         if (error) throw error;
         let message = CarMessages.success.s0;
@@ -107,7 +126,6 @@ exports.updateMaintenance = (req,res) => {
             lastCamberReview : req.body.lastCamberReview,
             lastWaterChange : req.body.lastWaterChange,
             lastInspection : req.body.lastInspection,
-            additionalComments : req.body.additionalComments
         }
     }, {
         new: true
@@ -126,23 +144,53 @@ exports.updateRefuel = (req,res) =>{
     const errors = validationResult(req).array();
     if (errors.length > 0) return res.status(406).send(errors);
     actualDate = new Date;
-    Car.findOneAndUpdate({
+    let car = {}
+    Car.findOne({
         _id: req.params.id
-    }, {
-        refuel: {
-            actualRefuelLiters : req.body.actualRefuelLiters,
-            actualRefuelPrice : req.body.actualRefuelPrice,
-            actualRefuelDate : actualDate
-        }
-    }, {
-        new: true
-    }, (error, Car) => {
+    }).exec((error, car) => {
         if (error) throw error;
-        if (!Car) return res.status(CarMessages.error.e0.http).send(CarMessages.error.e0);
-
-        let message = CarMessages.success.s6;
-        message.body = Car;
-        return res.status(message.http).send(message);
-
+        if (!car) return res.status(CarMessages.error.e0.http).send(CarMessages.error.e0);
+        Car.findOneAndUpdate({
+            _id: req.params.id
+        }, {
+            refuel: {
+                lastRefuelDate : car.refuel.actualRefuelDate,
+                lastRefuelLiters: car.refuel.actualRefuelLiters,
+                lastRefuelPrice: car.refuel.actualRefuelPrice,
+                lastRefuelKm: car.refuel.actualRefuelKm,
+                actualRefuelKm: req.body.actualRefuelKm,
+                actualRefuelLiters : req.body.actualRefuelLiters,
+                actualRefuelPrice : req.body.actualRefuelPrice,
+                actualRefuelDate : actualDate
+            }
+        }, {
+            new: true
+        }, (error, Car) => {
+            if (error) throw error;
+            if (!Car) return res.status(CarMessages.error.e0.http).send(CarMessages.error.e0);
+    
+            let message = CarMessages.success.s6;
+            message.body = Car;
+            return res.status(message.http).send(message);
+    
+        });
     });
+
+},
+
+exports.importCar = (req,res) =>{
+    const errors = validationResult(req).array();
+    if (errors.length > 0) return res.status(406).send(errors);
+
+    //TODO: review
+    User.findOne({
+        _id: req.user._id
+    }, (error, user) => {
+        if (error) throw error;
+        if (!user) return res.status(UserMessages.error.e1.http).send(UserMessages.error.e1);
+        let message = UserMessages.success.s2;
+        return res.status(message.http).send(message);
+    });
+
+
 }

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/EgonHoltz/pwa-bknd-autogestao#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

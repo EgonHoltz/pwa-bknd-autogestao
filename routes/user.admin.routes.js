@@ -18,9 +18,5 @@ router.route("/deactivate/:id")
 router.route("/activate/:id")
     .put(AuthController.checkAuth, [param("id").isMongoId()], UserController.activate);
 
-router.route('/:id')
-    .get(AuthController.checkAuth, [param("id").isMongoId()], UserController.getOne)
-    .put(AuthController.checkAuth, [param("id").isMongoId()], UserController.update)
-    .delete(AuthController.checkAuth, [param("id").isMongoId()], UserController.delete);
 
 module.exports = router;

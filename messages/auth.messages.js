@@ -21,6 +21,11 @@ module.exports = {
             http: 401,
             code: "InvalidToken",
             type: "error"
+        },
+        e2: {
+            http: 403,
+            code: "UserDesabled",
+            type: "error"
         }
     }
 }

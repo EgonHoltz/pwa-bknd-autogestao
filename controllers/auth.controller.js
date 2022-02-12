@@ -4,7 +4,7 @@ const {
 } = require('express-validator');
 const AuthMessages = require("../messages/auth.messages");
 const UserMessages = require("../messages/user.messages");
-//const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
 const CONFIG = require("../config/config");
 
@@ -20,8 +20,7 @@ exports.login = (req, res) => {
     if (errors.length > 0) return res.status(406).send(errors);
 
     let username = req.body.username;
-    let password = req.body.password;
-    //let password = escape(req.body.password);
+    let password = escape(req.body.password);
 
     User.findOne({
         "auth.username": username
@@ -45,9 +44,14 @@ exports.login = (req, res) => {
                 loginSuccess: true
             }
         }
-        //if (!user || !bcrypt.compareSync(password, user.auth.password))
-        //    access.loginSuccess = false
-        //    return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
+        if (!user || !bcrypt.compareSync(password, user.auth.password)){
+            access.loginSuccess = false
+            return res.header("Authorization", null).status(AuthMessages.error.e0.http).send(AuthMessages.error.e0);
+        }
+        if (!user.active){
+            access.loginSuccess = false
+            return res.header("Authorization", null).status(AuthMessages.error.e2.http).send(AuthMessages.error.e2);
+        }
 
         let payload = {
             pk: user.auth.publicKey

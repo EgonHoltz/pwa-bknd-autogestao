@@ -23,12 +23,6 @@ router.route('/')
     ], UserController.create)
     .get(AuthController.checkAuth, UserController.get);
 
-router.route("/deactivate/:id")
-    .put(AuthController.checkAuth, [param("id").isMongoId()], UserController.deactivate);
-
-router.route("/activate/:id")
-    .put(AuthController.checkAuth, [param("id").isMongoId()], UserController.activate);
-
 router.route('/:id')
     .get(AuthController.checkAuth, [param("id").isMongoId()], UserController.getOne)
     .put(AuthController.checkAuth, [param("id").isMongoId()], UserController.update)

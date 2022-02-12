@@ -27,16 +27,23 @@ exports.login = (req, res) => {
         "auth.username": username
     }, (error, user) => {
         if (error) throw error;
-
+        let access = {}
         let actualDate = new Date
         let id = user._id;
-        let browser = req.rawHeaders[7].split(",")[1].split(";")[0].replace(/["]+/g, '').trim() +", " + req.rawHeaders[7].split(",")[1].split(";")[1].replace(/["]+/g, '');
-        let soWithBrowser = req.rawHeaders[15].replace(/["]+/g, '') + " - " + browser;
-        let access = {
-            lastLoginDate: actualDate,
-            ipAddress: req.rawHeaders[21],
-            loginSuccess: true,
-            client: soWithBrowser
+        if (req != undefined && req.rawHeaders != undefined && req.rawHeaders.length >22){
+            let browser = req.rawHeaders[7].split(",")[1].split(";")[0].replace(/["]+/g, '').trim() +", " + req.rawHeaders[7].split(",")[1].split(";")[1].replace(/["]+/g, '');
+            let soWithBrowser = req.rawHeaders[15].replace(/["]+/g, '') + " - " + browser;
+            access = {
+                lastLoginDate: actualDate,
+                ipAddress: req.rawHeaders[21],
+                loginSuccess: true,
+                client: soWithBrowser
+            }
+        } else {
+            access = {
+                lastLoginDate: actualDate,
+                loginSuccess: true
+            }
         }
         //if (!user || !bcrypt.compareSync(password, user.auth.password))
         //    access.loginSuccess = false
@@ -73,11 +80,9 @@ exports.login = (req, res) => {
 }
 
 exports.checkAuth = (req, res, callback) => {
-    console.log("/auth/checkAuth")
 
     let token = req.headers.authorization;
     if (!token) return res.status(AuthMessages.error.e1.http).send(AuthMessages.error.e1);
-
 
     let payload = JWT.decode(token);
 

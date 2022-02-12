@@ -23,12 +23,12 @@ router.route('/')
         sanitizeBody('registration').whitelist(CONFIG.sanitize.alphabet + CONFIG.sanitize.numerical),
     ], CarController.create);
     
-    router.route('/:id')
+router.route('/:id')
     .get(AuthController.checkAuth, [param("id").isMongoId()], CarController.getOne)
     .put(AuthController.checkAuth, [param("id").isMongoId()], CarController.update)
     .delete(AuthController.checkAuth, [param("id").isMongoId()], CarController.delete);
     
-    router.route('/:id/maintenance')
+router.route('/:id/maintenance')
     .post(AuthController.checkAuth, [
         param('id').isMongoId(),
         body('lastOilChange').isNumeric(),
@@ -43,7 +43,7 @@ router.route('/')
         sanitizeBody('additionalComments').whitelist(CONFIG.sanitize.alphabet + CONFIG.sanitize.numerical)
     ], CarController.updateMaintenance);
     
-    router.route('/:id/refuel')
+router.route('/:id/refuel')
     .post(AuthController.checkAuth, [
         param('id').isMongoId(),
         body('actualRefuelLiters').isNumeric(),
@@ -51,8 +51,7 @@ router.route('/')
         body('actualRefuelKm').isNumeric()
     ], CarController.updateRefuel);
 
-    router.route('/import')
-    .get(AuthController.checkAuth, [param("id").isMongoId()], CarController.importCar);
-
+router.route('/import')
+    .post(AuthController.checkAuth, [param("id").isMongoId()], CarController.importCar);
 
 module.exports = router;

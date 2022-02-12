@@ -23,6 +23,20 @@ exports.get = (req, res) => {
     });
 }
 
+exports.getAllCars = (req, res) => {
+    Car.find(req.query, (error, cars) => {
+        if (error) throw error;
+
+        let message = CarMessages.success.s2;
+
+        if (cars.length < 0)
+            message = CarMessages.success.s5;
+
+        message.body = cars;
+        return res.status(message.http).send(message);
+    });
+}
+
 exports.create = (req, res) => {
     const errors = validationResult(req).array();
     if (errors.length > 0) return res.status(406).send(errors);

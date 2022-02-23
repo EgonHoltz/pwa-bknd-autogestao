@@ -2,12 +2,13 @@ module.exports = (app) => {
     const cookieParser = require('cookie-parser');
     const bodyParser = require('body-parser');
     const cors = require('cors');
-    app.use(cors());
+    app.use(cors({
+        origin: "*"
+    }));
     app.options('*', cors());
     app.use((req, res, callback) => {
         console.log("req type: " + req.method + " req url: " + req.url)
         res.header('Access-Control-Allow-Origin', '*');
-        res.header("Access-Control-Allow-Credentials", true);
         res.header('Access-Control-Allow-Methods',
             'GET, POST, OPTIONS, PUT, PATCH, DELETE');
         res.header('Access-Control-Allow-Headers',

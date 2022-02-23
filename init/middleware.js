@@ -7,6 +7,7 @@ module.exports = (app) => {
     app.use((req, res, callback) => {
         console.log("req type: " + req.method + " req url: " + req.url)
         res.header('Access-Control-Allow-Origin', '*');
+        res.header("Access-Control-Allow-Credentials", true);
         res.header('Access-Control-Allow-Methods',
             'GET, POST, OPTIONS, PUT, PATCH, DELETE');
         res.header('Access-Control-Allow-Headers',

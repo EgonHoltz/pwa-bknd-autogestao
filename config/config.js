@@ -4,7 +4,7 @@ module.exports = {
         collections: {
             cars: 'cars',
             user: 'users',
-        }        
+        }
     },
     auth: {
         expiration_time: 9999999,

@@ -30,13 +30,13 @@ exports.login = (req, res) => {
         let actualDate = new Date
         let id = user._id;
         if (req != undefined && req.rawHeaders != undefined && req.rawHeaders.length >22){
-            let browser = req.rawHeaders[7].split(",")[1].split(";")[0].replace(/["]+/g, '').trim() +", " + req.rawHeaders[7].split(",")[1].split(";")[1].replace(/["]+/g, '');
-            let soWithBrowser = req.rawHeaders[15].replace(/["]+/g, '') + " - " + browser;
+            //let browser = req.rawHeaders[7].split(",")[1].split(";")[0].replace(/["]+/g, '').trim() +", " + req.rawHeaders[7].split(",")[1].split(";")[1].replace(/["]+/g, '');
+            //let soWithBrowser = req.rawHeaders[15].replace(/["]+/g, '') + " - " + browser;
             access = {
                 lastLoginDate: actualDate,
-                ipAddress: req.rawHeaders[21],
+            //    ipAddress: req.rawHeaders[21],
                 loginSuccess: true,
-                client: soWithBrowser
+            //    client: soWithBrowser
             }
         } else {
             access = {

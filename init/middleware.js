@@ -2,6 +2,7 @@ module.exports = (app) => {
     const cookieParser = require('cookie-parser');
     const bodyParser = require('body-parser');
     const cors = require('cors');
+    const express = require('express');
     app.use(cors({
         origin: "*"
     }));
@@ -17,13 +18,13 @@ module.exports = (app) => {
         return callback();
     })
 
+    app.use('./uploads', express.static('uploads'));
+
     // parse application/x-www-form-urlencoded
-    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }));
 
     // parse application/json
-    app.use(bodyParser.json())
+    app.use(bodyParser.json({ limit: '1mb', extended: true }));
     app.use(cookieParser());
     app.set('trust proxy', 1);
-
-
 }

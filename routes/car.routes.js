@@ -8,6 +8,11 @@ const {
 } = require('express-validator');
 const CONFIG = require("../config/config");
 const AuthController = require("../controllers/auth.controller");
+const multer = require('multer');
+
+const upload = multer({
+    dest: './public/data/uploads'
+  });
 
 router.route('/')
     .get(AuthController.checkAuth, CarController.get)
@@ -52,6 +57,6 @@ router.route('/:id/refuel')
     ], CarController.updateRefuel);
 
 router.route('/import')
-    .post(AuthController.checkAuth, [param("id").isMongoId()], CarController.importCar);
+    .post(AuthController.checkAuth, upload.single('file'), CarController.importCar);
 
 module.exports = router;

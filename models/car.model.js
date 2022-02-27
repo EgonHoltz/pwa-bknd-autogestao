@@ -5,9 +5,7 @@ const CONFIG = require('../config/config');
 const carSchema = new Schema({
     brand: String,
     model: String,
-    registration: {
-        type: String,
-    },
+    registration: String,
     characteristics: {
         productionDate : Date,
         FuelType : String,

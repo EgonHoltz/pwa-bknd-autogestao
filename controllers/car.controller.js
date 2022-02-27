@@ -114,7 +114,7 @@ exports.getOne = (req, res) => {
 
     Car.findOne({
         _id: req.params.id
-    }).populate("comments.user", "name").exec((error, Car) => {
+    }).exec((error, Car) => {
         if (error) throw error;
         if (!Car) return res.status(CarMessages.error.e0.http).send(CarMessages.error.e0);
         let message = CarMessages.success.s2;
@@ -202,9 +202,18 @@ exports.importCar = (req,res) =>{
     }, (error, user) => {
         if (error) throw error;
         if (!user) return res.status(UserMessages.error.e1.http).send(UserMessages.error.e1);
-        let message = UserMessages.success.s2;
-        return res.status(message.http).send(message);
+
+        if (!req.file) return res.status(CarMessages.error.e1.http).send(CarMessages.error.e1);
+
+
+        let rawdata = fs.readFileSync(`${req.file.destination}/${req.file.filename}`);
+        let car = JSON.parse(rawdata);
+        car['user'] = user._id;
+        new Car(car).save((error, Car) => {
+            if (error) throw error;
+            let message = CarMessages.success.s0;
+            message.body = Car;
+            return res.header("location", "/cars/" + Car._id).status(message.http).send(message);
+        });
     });
-
-
 }

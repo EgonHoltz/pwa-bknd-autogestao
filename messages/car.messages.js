@@ -41,6 +41,11 @@ module.exports = {
             http: 404,
             code: "CarNotFound",
             type: "error"
+        },
+        e1: {
+            http: 400,
+            code: "FileNotAccepted",
+            type: "error"
         }
     }
 }
